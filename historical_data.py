@@ -1,14 +1,16 @@
 import requests
 from datetime import datetime
 
-ini = '2002'
-fin = '2018'
-tf = 'C'
-conf = ''
-source = 'https://www.spensiones.cl/apps/valoresCuotaFondo/vcfAFPxls.php?aaaaini=2002&aaaafin=2018&tf=B&fecconf=20181210'
-r = requests.get(source)
+inityear = {'A': 2002, 'B': 2002, 'C': 1981, 'D': 2002, 'E': 2000}
 
-path = 'vcfA2002-2018.csv'
+today = datetime.now()
+fin = today.year
+conf = today.strftime("%Y%m%d")
 
-with open(path, 'wb') as out_file:
-    out_file.write(r.content)
+for tf, ini in inityear.items():
+    source = f'https://www.spensiones.cl/apps/valoresCuotaFondo/vcfAFPxls.php?aaaaini={ini}&aaaafin={fin}&tf={tf}&fecconf={conf}'
+    r = requests.get(source)
+    path = f'vcf{tf}{ini}-{fin}.csv'
+
+    with open(path, 'wb') as out_file:
+        out_file.write(r.content)
